@@ -2,167 +2,68 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="schedulerr.css">
-    <title>Scheduler</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulazione Scheduler</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div style="border: 2px solid black; width: 80%; margin: 20px auto; text-align: center; padding: 20px;">
-        <h1 style="margin: 0; font-size: 2em;">Scelta delle opzioni di simulazione</h1>
-        <p style="text-align: left; margin-top: 20px;">
-            Configurazione dello scheduler:
-        </p>
-        <div style="display: flex; flex-wrap: wrap; justify-content: space-between;">
-            <label>Numero processi: 
-                <input type="number" id="numProcessi" min="1" value="10" style="width: 100px;">
-            </label>
-            <label>Durata massima: 
-                <input type="number" id="durataMax" min="1" value="10" style="width: 100px;">
-            </label>
-            <label>Arrivo massimo: 
-                <input type="number" id="arrivoMax" min="1" value="10" style="width: 100px;">
-            </label>
-            <label>Quanto di tempo (RR): 
-                <input type="number" id="quantoTempo" min="1" value="2" style="width: 100px;">
-            </label>
-            <label>Clock (ms): 
-                <input type="number" id="clock" min="1" value="100" style="width: 100px;">
-            </label>
-            <label>Priorità massima: 
-                <input type="number" id="prioritaMax" min="1" value="10" style="width: 100px;">
-            </label>
-            <label>Algoritmo di scheduling:
-                <select id="algoritmo" style="width: 150px;">
-                    <option>Round Robin</option>
-                    <option>FCFS</option>
-                    <option>SRTF</option>
-                    <option>Priorità</option>
-                </select>
-            </label>
-            <div style="margin-top: 20px; width: 100%; text-align: center;">
-                <button onclick="creaProcessi()" style="margin-right: 10px;">Crea</button>
-                <button onclick="" style="margin-right: 10px;">Avvia Simulazione</button>
-                <button onclick="">Ferma Simulazione</button>
-            </div>
-        </div>
+  <div class="container">
+    <header>Simulazione scheduler</header>
+
+    <div class="form-section">
+      <label>Numero processi: <input type="number" id="num-processi" value="10" min="1"></label>
+      <label>Durata massima: <input type="number" id="durata-massima" value="10" min="1"></label>
+      <label>Arrivo massimo: <input type="number" id="arrivo-massimo" value="10" min="1"></label>
+      <label>Quanto (Round Robin): <input type="number" id="quanto" value="2" min="1"></label>
+      <label>Clock (ms): <input type="number" id="clock" value="100" min="1"></label>
+      <label>Priorità massima: <input type="number" id="priorita-massima" value="10" min="1"></label>
+      <label>Algoritmo di Scheduling: 
+        <select id="algoritmo">
+          <option value="Round Robin">Round Robin</option>
+          <option value="Priorità">Priorità</option>
+        </select>
+      </label>
     </div>
 
-    <!-- Due box sotto accanto -->
-    <div style="display: flex; justify-content: space-around; margin-top: 30px;">
-        <div style="width: 45%; height: 300px; border: 2px solid black; text-align: center; padding: 10px;">
-            <h2>Coda processi</h2>
-            <table style="width: 100%; text-align: left; border-collapse: collapse;">
-                <thead>
-                    <tr>
-                        <th>Nome</th>
-                        <th>Arrivo</th>
-                        <th>Durata</th>
-                        <th>Priorità</th>
-                    </tr>
-                </thead>
-                <tbody id="bodytabella"></tbody>
-            </table>
-        </div>
-        <div style="width: 45%; height: 300px; border: 2px solid black; text-align: center; padding: 10px;">
-            <h2>Simulazione</h2>
-        </div>
+    <div class="buttons">
+      <button id="crea-processi" onclick="creaProcessi()">Crea Processi</button>
+      <button id="avvia-simulazione">Avvia Simulazione</button>
+      <button id="ferma-simulazione">Ferma Simulazione</button>
     </div>
 
-    <script>
-        let processi = [];
-        let tempoSimulazione = 0;
-        let timer;
+    <div class="table-container">
+      <table id="coda">
+        <caption>Coda</caption>
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>Arrivo</th>
+            <th>Durata</th>
+            <th>Priorità</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
 
-        function getRandomInt(max) {
-            return Math.floor(Math.random() * max);
-        }
+      <table id="diagramma">
+        <caption>Diagramma</caption>
+        <thead>
+          <tr>
+            <th>nome</th>
+            <th>arrivo</th>
+            <th>durata</th>
+            <th>Priorità</th>
+            <th>T.T.</th>
+            <th>T.A.</th>
+            <th colspan="50" class="timeline">Timeline</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
 
-        function creaProcessi() {
-            const numProcessi = parseInt(document.getElementById("numProcessi").value);
-            const durataMax = parseInt(document.getElementById("durataMax").value);
-            const arrivoMax = parseInt(document.getElementById("arrivoMax").value);
-            const prioritaMax = parseInt(document.getElementById("prioritaMax").value);
-            const bodytabella = document.getElementById("bodytabella");
-
-            processi = [];
-            bodytabella.innerHTML = "";
-
-            for (let i = 0; i < numProcessi; i++) {
-                const nome = "P" + (i + 1);
-                const arrivo = getRandomInt(arrivoMax);
-                const durata = getRandomInt(durataMax) + 1; // Evita durata 0
-                const priorita = getRandomInt(prioritaMax);
-
-                processi.push({ nome, arrivo, durata, priorita, completato: false });
-            }
-
-            processi.sort((a, b) => a.arrivo - b.arrivo);
-
-            let contenutoTabella = "";
-            for (let i = 0; i < processi.length; i++) {
-                let riga = "<tr>" +
-                    "<td>" + processi[i].nome + "</td>" +
-                    "<td>" + processi[i].arrivo + "</td>" +
-                    "<td>" + processi[i].durata + "</td>" +
-                    "<td>" + processi[i].priorita + "</td>" +
-                    "</tr>";
-                contenutoTabella += riga;
-            }
-
-            bodytabella.innerHTML = contenutoTabella;
-        }
-
-        function avviaSimulazione() {
-            const quantoTempo = parseInt(document.getElementById("quantoTempo").value);
-            const clock = parseInt(document.getElementById("clock").value);
-
-            if (processi.length === 0) {
-                return; // Non fa nulla se non sono stati creati i processi
-            }
-
-            timer = setInterval(() => {
-                tempoSimulazione++;
-                gestisciRoundRobin(quantoTempo);
-
-                if (processi.every(p => p.completato)) {
-                    clearInterval(timer);
-                }
-            }, clock);
-        }
-
-        function gestisciRoundRobin(quanto) {
-            const processoCorrente = processi.find(p => !p.completato && p.arrivo <= tempoSimulazione);
-
-            if (processoCorrente) {
-                processoCorrente.durata -= quanto;
-
-                if (processoCorrente.durata <= 0) {
-                    processoCorrente.completato = true;
-                } else {
-                    processi.push(processoCorrente);
-                }
-
-                processi.shift();
-                aggiornaTabella();
-            }
-        }
-
-        function aggiornaTabella() {
-            const bodytabella = document.getElementById("bodytabella");
-            let contenutoTabella = "";
-            for (let i = 0; i < processi.length; i++) {
-                const classeCompletato = processi[i].completato ? "style='background-color: lightgray;'" : "";
-                let riga = "<tr " + classeCompletato + ">" +
-                    "<td>" + processi[i].nome + "</td>" +
-                    "<td>" + processi[i].arrivo + "</td>" +
-                    "<td>" + (processi[i].durata > 0 ? processi[i].durata : 0) + "</td>" +
-                    "<td>" + processi[i].priorita + "</td>" +
-                    "</tr>";
-                contenutoTabella += riga;
-            }
-            bodytabella.innerHTML = contenutoTabella;
-        }
-    </script>
+  <script src="script2.js"></script>
 </body>
 </html>
