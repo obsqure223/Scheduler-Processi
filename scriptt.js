@@ -185,13 +185,7 @@ function simulaRoundRobin(quanto, clock) {
 function aggiornaVisualizzazione(processi, tempo, processoCorrenteIndex) {
   const diagramma = document.querySelector("#diagramma tbody");
   diagramma.innerHTML = "";
-
-  const colors = [
-    '#FF0000', '#00FF00', '#0000FF', '#FF00FF',
-    '#FFFF00', '#00FFFF', '#800080', '#FFA500',
-    '#008000', '#000080'
-  ];
-
+  
   const tempoMassimo = Math.max(...processi.map(p => p.tempoCompletamento || 0), tempo);
 
   processi.forEach((p, index) => {
@@ -221,7 +215,7 @@ function aggiornaVisualizzazione(processi, tempo, processoCorrenteIndex) {
       cell.style.border = "1px solid #ddd";
 
       if (p.esecuzioni && p.esecuzioni.includes(t)) {
-        cell.style.backgroundColor = colors[index];
+        cell.style.backgroundColor = "#FFD700";
       }
       timeline.appendChild(cell);
     }
