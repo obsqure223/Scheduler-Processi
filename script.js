@@ -189,10 +189,10 @@ function aggiornaVisualizzazione(processi, tempo, processoCorrenteIndex) {
   const diagramma = document.querySelector("#diagramma tbody");
   diagramma.innerHTML = "";
 
-  const colori = [
-    '#800000', '#800000', '#800000', '#800000',
-    '#800000', '#800000', '#800000', '#800000',
-    '#800000', '#800000'
+  const colors = [
+    '#FF0000', '#00FF00', '#0000FF', '#FF00FF',
+    '#FFFF00', '#00FFFF', '#800080', '#FFA500',
+    '#008000', '#000080'
   ];
 
   const tempoMassimo = Math.max(...processi.map(p => p.tempoCompletamento || 0), tempo);
