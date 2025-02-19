@@ -4,7 +4,7 @@ body {
   font-family: 'Poppins', sans-serif;
   margin: 0;
   padding: 20px;
-  background: linear-gradient(135deg, #8B0000 0%, #6A0D26 100%);
+  background: linear-gradient(135deg, #8B0000 0%, #6A0D26 100%); /* Bordeaux */
   color: #ffffff;
   min-height: 100vh;
 }
@@ -55,16 +55,16 @@ select {
   border: 2px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   font-size: 15px;
-  background: #6A0D26;
-  color: #FFD700;
+  background: #6A0D26; /* Bordeaux */
+  color: #FFD700; /* Oro */
   transition: all 0.3s ease;
   font-family: 'Poppins', sans-serif;
 }
 
 input:focus,
 select:focus {
-  border-color: #FFD700;
-  box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
+  border-color: #FFD700; /* Oro */
+  box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2); /* Oro chiaro */
   outline: none;
   background: rgba(255, 255, 255, 0.1);
 }
@@ -72,7 +72,6 @@ select:focus {
 .buttons {
   margin: 35px 0;
   display: flex;
-  flex-wrap: wrap;
   gap: 20px;
   justify-content: center;
 }
@@ -80,7 +79,7 @@ select:focus {
 button {
   padding: 14px 28px;
   border: none;
-  background: linear-gradient(135deg, #8B0000 0%, #6A0D26 100%);
+  background: linear-gradient(135deg, #8B0000 0%, #6A0D26 100%); /* Bordeaux */
   color: white;
   border-radius: 12px;
   cursor: pointer;
@@ -90,9 +89,7 @@ button {
   text-transform: uppercase;
   letter-spacing: 1px;
   font-family: 'Poppins', sans-serif;
-  box-shadow: 0 4px 15px rgba(139, 0, 0, 0.3);
-  min-width: 200px;
-  text-align: center;
+  box-shadow: 0 4px 15px rgba(139, 0, 0, 0.3); /* Bordeaux */
 }
 
 button:hover {
@@ -109,14 +106,105 @@ button.stop:hover {
   box-shadow: 0 8px 20px rgba(231, 76, 60, 0.4);
 }
 
+.table-container {
+  margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 15px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+caption {
+  font-weight: 600;
+  padding: 15px;
+  background: linear-gradient(135deg, #8B0000 0%, #6A0D26 100%); /* Bordeaux */
+  color: #FFD700; /* Oro */
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 16px;
+}
+
+th,
+td {
+  padding: 15px 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: center;
+  font-size: 14px;
+  color: #ffffff;
+}
+
+th {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+tr:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+#diagramma td {
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#diagramma .timeline {
+  text-align: center;
+  font-size: 12px;
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  font-weight: 500;
+  color: #FFD700; /* Oro */
+}
+
+#diagramma tbody td:last-child {
+  padding: 0;
+  width: 100%;
+}
+
+#diagramma tbody td:last-child div {
+  width: 25px;
+  height: 35px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+#diagramma tbody td:last-child div:not(:empty) {
+  background: linear-gradient(135deg, #8B0000 0%, #6A0D26 100%); /* Bordeaux */
+  opacity: 0.9;
+  transition: all 0.3s ease;
+}
+
+#diagramma tbody td:last-child div:not(:empty):hover {
+  opacity: 1;
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(139, 0, 0, 0.3); /* Bordeaux */
+}
+
 @media (max-width: 768px) {
-  .buttons {
-    flex-direction: column;
-    align-items: center;
+  .container {
+    padding: 20px;
   }
 
-  button {
-    width: 100%;
-    max-width: 300px;
+  .table-container {
+    overflow-x: auto;
   }
 }
