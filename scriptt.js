@@ -35,6 +35,7 @@ function aggiornaTabellaProcessi() {
   const tbody = document.querySelector("#coda tbody");
   tbody.innerHTML = "";
 
+  // Itera sui processi già ordinati
   for (let p of processi) {
     const row = document.createElement("tr");
 
@@ -130,7 +131,7 @@ function mettiInPausaSimulazione() {
 }
 
 function simulaFCFS(clock, statoIniziale = null) {
-  const processiInEsecuzione = statoIniziale?.processiInEsecuzione || processi.map(p => ({
+  const processiInEsecuzione = processi.map(p => ({
     ...p,
     tempoRimanente: p.durata,
     completato: false,
@@ -180,130 +181,16 @@ function simulaFCFS(clock, statoIniziale = null) {
   }, clock);
 }
 
-function simulaPriorita(clock, statoIniziale = null) {
-  const processiInEsecuzione = statoIniziale?.processiInEsecuzione || processi.map(p => ({
-    ...p,
-    tempoRimanente: p.durata,
-    completato: false,
-    esecuzioni: []
-  }));
-
-  let tempoCorrente = statoIniziale?.tempoCorrente || 0;
-
-  const diagramma = document.querySelector("#diagramma tbody");
-  diagramma.innerHTML = "";
-
-  return setInterval(() => {
-    let processoMigliore = null;
-    let prioritaMigliore = Infinity;
-
-    for (const processo of processiInEsecuzione) {
-      if (!processo.completato &&
-        processo.arrivo <= tempoCorrente &&
-        processo.tempoRimanente > 0 &&
-        processo.priorita < prioritaMigliore) {
-        processoMigliore = processo;
-        prioritaMigliore = processo.priorita;
-      }
-    }
-
-    if (processoMigliore) {
-      processoMigliore.tempoRimanente--;
-      processoMigliore.esecuzioni.push(tempoCorrente);
-
-      if (processoMigliore.tempoRimanente === 0) {
-        processoMigliore.completato = true;
-        processoMigliore.tempoCompletamento = tempoCorrente + 1;
-        processoMigliore.turnAroundTime = processoMigliore.tempoCompletamento - processoMigliore.arrivo;
-        processoMigliore.tempoAttesa = processoMigliore.turnAroundTime - processoMigliore.durata;
-      }
-
-      aggiornaVisualizzazione(processiInEsecuzione, tempoCorrente);
-    }
-
-    tempoCorrente++;
-
-    if (processiInEsecuzione.every(p => p.completato)) {
-      aggiornaVisualizzazione(processiInEsecuzione, tempoCorrente);
-      clearInterval(intervalloSimulazione);
-      mostraRisultatiFinali(processiInEsecuzione);
-    }
-
-    statoSimulazione = {
-      processiInEsecuzione,
-      tempoCorrente
-    };
-  }, clock);
-}
-
-function simulaRoundRobin(quanto, clock, statoIniziale = null) {
-  const processiInEsecuzione = statoIniziale?.processiInEsecuzione || processi.map(p => ({
-    ...p,
-    tempoRimanente: p.durata,
-    completato: false,
-    quantumUsato: 0,
-    esecuzioni: []
-  }));
-  let tempoCorrente = statoIniziale?.tempoCorrente || 0;
-  let indiceProcessoCorrente = statoIniziale?.indiceProcessoCorrente || 0;
-
-  const diagramma = document.querySelector("#diagramma tbody");
-  diagramma.innerHTML = "";
-
-  return setInterval(() => {
-    let processoTrovato = false;
-    let contatore = 0;
-
-    while (!processoTrovato && contatore < processiInEsecuzione.length) {
-      const processo = processiInEsecuzione[indiceProcessoCorrente];
-
-      if (!processo.completato && processo.arrivo <= tempoCorrente && processo.tempoRimanente > 0) {
-        processoTrovato = true;
-        processo.quantumUsato++;
-        processo.tempoRimanente--;
-        processo.esecuzioni.push(tempoCorrente);
-
-        aggiornaVisualizzazione(processiInEsecuzione, tempoCorrente, indiceProcessoCorrente);
-
-        if (processo.tempoRimanente === 0) {
-          processo.completato = true;
-          processo.tempoCompletamento = tempoCorrente + 1;
-          processo.turnAroundTime = processo.tempoCompletamento - processo.arrivo;
-          processo.tempoAttesa = processo.turnAroundTime - processo.durata;
-          processo.quantumUsato = 0;
-        } else if (processo.quantumUsato >= quanto) {
-          processo.quantumUsato = 0;
-          indiceProcessoCorrente = (indiceProcessoCorrente + 1) % processiInEsecuzione.length;
-        }
-      } else {
-        indiceProcessoCorrente = (indiceProcessoCorrente + 1) % processiInEsecuzione.length;
-      }
-      contatore++;
-    }
-
-    tempoCorrente++;
-
-    if (processiInEsecuzione.every(p => p.completato)) {
-      aggiornaVisualizzazione(processiInEsecuzione, tempoCorrente);
-      clearInterval(intervalloSimulazione);
-      mostraRisultatiFinali(processiInEsecuzione);
-    }
-
-    statoSimulazione = {
-      processiInEsecuzione,
-      tempoCorrente,
-      indiceProcessoCorrente
-    };
-  }, clock);
-}
-
 function aggiornaVisualizzazione(processi, tempo, processoCorrenteIndex) {
   const diagramma = document.querySelector("#diagramma tbody");
   diagramma.innerHTML = "";
-  
-  const tempoMassimo = Math.max(...processi.map(p => p.tempoCompletamento || 0), tempo);
 
-  processi.forEach((p, index) => {
+  // Ordina i processi per nome (P1, P2, P3, ...)
+  const processiOrdinati = [...processi].sort((a, b) => a.nome.localeCompare(b.nome));
+
+  const tempoMassimo = Math.max(...processiOrdinati.map(p => p.tempoCompletamento || 0), tempo);
+
+  processiOrdinati.forEach((p, index) => {
     const row = document.createElement("tr");
 
     row.innerHTML = `
