@@ -1,10 +1,26 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+.first-color { 
+  background: #e4f1fe;  /* Celeste chiaro per gli sfondi */
+}
+	
+.second-color { 
+  background: #8dc6ff;  /* Celeste più scuro per evidenziare */
+}
+
+.third-color { 
+  background: #22313f;  /* Blu scuro per dettagli più marcati */
+}
+
+.fourth-color { 
+  background: #34495e;  /* Grigio scuro per sezioni di contenuto */
+}
+
+/* Applicazioni dei colori al resto del CSS */
 
 body {
   font-family: 'Poppins', sans-serif;
   margin: 0;
   padding: 20px;
-  background: linear-gradient(135deg, #A2D5F2 0%, #E6F7FF 100%); /* Ciano sfumato */
+  background: linear-gradient(135deg, #e4f1fe 0%, #8dc6ff 100%); /* Celeste sfumato */
   color: #333333;
   min-height: 100vh;
 }
@@ -24,7 +40,7 @@ header {
   text-align: center;
   font-size: 30px;
   font-weight: 700;
-  color: #444444;
+  color: #22313f;  /* Blu scuro per il titolo */
   margin-bottom: 30px;
   text-transform: uppercase;
   letter-spacing: 2px;
@@ -37,50 +53,45 @@ header {
   margin-bottom: 30px;
 }
 
-.form-section:nth-child(2) {
-  grid-template-columns: repeat(3, 1fr);
-}
-
 input, select {
   width: 100%;
-  padding: 6px 10px;  /* Ridotto padding */
+  padding: 6px 10px;
   border: 2px solid rgba(0, 0, 0, 0.1);
-  border-radius: 8px;  /* Bordo più arrotondato */
-  font-size: 12px;  /* Ridotto font size */
-  background: #ffffff;  /* Impostato bianco come sfondo */
+  border-radius: 8px;
+  font-size: 12px;
+  background: #ffffff;  /* Interno bianco */
   color: #333333;
   transition: all 0.3s ease;
-  font-family: 'Poppins', sans-serif;
 }
 
 input[type="number"], select[name="algoritmo_scheduling"] {
   width: 80%;
-  padding: 6px 8px;  /* Ridotto padding */
-  font-size: 12px;  /* Ridotto font size */
+  padding: 6px 8px;
+  font-size: 12px;
 }
 
 input:focus, select:focus {
-  border-color: #0288D1;
-  box-shadow: 0 0 0 3px rgba(2, 136, 209, 0.2);
+  border-color: #34495e;  /* Grigio scuro per focus */
+  box-shadow: 0 0 0 3px rgba(52, 73, 94, 0.2);
   outline: none;
   background: rgba(255, 255, 255, 0.6);
 }
 
 button {
-  padding: 8px 15px;  /* Ridotto padding */
+  padding: 8px 15px;
   border: none;
-  background: linear-gradient(135deg, #26C6DA 0%, #00ACC1 100%);
+  background: linear-gradient(135deg, #8dc6ff 0%, #22313f 100%); /* Celeste scuro e blu scuro */
   color: #ffffff;
-  border-radius: 8px;  /* Bordo più arrotondato */
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 12px;  /* Ridotto font size */
+  font-size: 12px;
   font-weight: 600;
   transition: all 0.3s ease;
 }
 
 button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(38, 198, 218, 0.4);
+  box-shadow: 0 8px 20px rgba(141, 198, 255, 0.4);
 }
 
 .table-container {
@@ -97,34 +108,29 @@ table {
 }
 
 th, td {
-  padding: 10px 15px;  /* Ridotto padding */
+  padding: 10px 15px;
   border: 1px solid rgba(0, 0, 0, 0.1);
   text-align: center;
-  font-size: 12px;  /* Ridotto font size */
-  color: #444444;
+  font-size: 12px;
+  color: #34495e;  /* Grigio scuro per il testo */
 }
 
 th {
-  background: rgba(0, 0, 0, 0.05);
+  background: #22313f;  /* Blu scuro per le intestazioni */
 }
 
 tr:nth-child(even) {
-  background: rgba(0, 0, 0, 0.03);
+  background: #e4f1fe;  /* Celeste chiaro per le righe pari */
 }
 
 tr:hover {
-  background: rgba(0, 0, 0, 0.08);
+  background: #8dc6ff;  /* Celeste più scuro al passaggio del mouse */
 }
 
-/* Cella coda e diagramma con bordi tondi */
+/* Coda e diagramma con bordi tondi */
 .coda-diagramma {
-  border-radius: 15px;  /* Bordo tondo */
+  border-radius: 15px;
   padding: 20px;
-  background: rgba(255, 255, 255, 0.8);
-}
-
-@media (max-width: 768px) {
-  .container {
-    padding: 20px;
-  }
+  background: #34495e;  /* Grigio scuro per la coda/diagramma */
+  color: #ffffff;
 }
