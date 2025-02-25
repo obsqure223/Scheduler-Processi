@@ -9,12 +9,23 @@ const mettiInPausaBtn = document.getElementById("metti-in-pausa");
 
 // Funzione per gestire il clic su "Metti in Pausa"
 mettiInPausaBtn.addEventListener("click", () => {
-  if (avviaSimulazioneBtn.textContent === "Avvia Simulazione") {
-    avviaSimulazioneBtn.textContent = "Riprendi Simulazione"; // Cambia il testo del pulsante
+  if (simulazioneInPausa) {
+    avviaSimulazione();
+    mettiInPausaBtn.textContent = "Metti in Pausa";
   } else {
-    avviaSimulazioneBtn.textContent = "Avvia Simulazione"; // Ripristina il testo del pulsante
+    mettiInPausaSimulazione();
+    mettiInPausaBtn.textContent = "Riprendi Simulazione";
   }
 });
+
+function mettiInPausaSimulazione() {
+  if (intervalloSimulazione) {
+    clearInterval(intervalloSimulazione);
+    intervalloSimulazione = null;
+    simulazioneInPausa = true;
+    console.log("Simulazione in pausa.");
+  }
+}
 
 function numeroCasuale(max) {
   return Math.floor(Math.random() * max);
