@@ -65,9 +65,6 @@ document.getElementById("avvia-simulazione").addEventListener("click", () => {
   avviaSimulazione();
 });
 
-document.getElementById("ferma-simulazione").addEventListener("click", () => {
-  fermaSimulazione();
-});
 
 function avviaSimulazione() {
   const algoritmo = document.getElementById("algoritmo").value;
