@@ -1,4 +1,3 @@
-
 const processi = [];
 let intervalloSimulazione = null;
 let simulazioneInPausa = false;
@@ -88,6 +87,8 @@ function avviaSimulazione() {
       intervalloSimulazione = simulaPriorita(clock, statoSimulazione);
     } else if (algoritmo === "FCFS") {
       intervalloSimulazione = simulaFCFS(clock, statoSimulazione);
+    } else if (algoritmo === "SRTF") {
+      intervalloSimulazione = simulaSRTF(clock, statoSimulazione);
     }
     simulazioneInPausa = false;
     statoSimulazione = null;
@@ -98,6 +99,8 @@ function avviaSimulazione() {
       intervalloSimulazione = simulaPriorita(clock);
     } else if (algoritmo === "FCFS") {
       intervalloSimulazione = simulaFCFS(clock);
+    } else if (algoritmo === "SRTF") {
+      intervalloSimulazione = simulaSRTF(clock);
     }
   }
 }
@@ -172,7 +175,6 @@ function simulaFCFS(clock, statoIniziale = null) {
     if (processiInEsecuzione.every(p => p.completato)) {
       aggiornaVisualizzazione(processiInEsecuzione, tempoCorrente);
       clearInterval(intervalloSimulazione);
-     // mostraRisultatiFinali(processiInEsecuzione);
     }
 
     statoSimulazione = {
@@ -228,7 +230,6 @@ function simulaPriorita(clock, statoIniziale = null) {
     if (processiInEsecuzione.every(p => p.completato)) {
       aggiornaVisualizzazione(processiInEsecuzione, tempoCorrente);
       clearInterval(intervalloSimulazione);
-      mostraRisultatiFinali(processiInEsecuzione);
     }
 
     statoSimulazione = {
@@ -288,7 +289,6 @@ function simulaRoundRobin(quanto, clock, statoIniziale = null) {
     if (processiInEsecuzione.every(p => p.completato)) {
       aggiornaVisualizzazione(processiInEsecuzione, tempoCorrente);
       clearInterval(intervalloSimulazione);
-      // mostraRisultatiFinali(processiInEsecuzione);
     }
 
     statoSimulazione = {
@@ -299,10 +299,66 @@ function simulaRoundRobin(quanto, clock, statoIniziale = null) {
   }, clock);
 }
 
+function simulaSRTF(clock, statoIniziale = null) {
+  const processiInEsecuzione = statoIniziale?.processiInEsecuzione || processi.map(p => ({
+    ...p,
+    tempoRimanente: p.durata,
+    completato: false,
+    esecuzioni: []
+  }));
+
+  let tempoCorrente = statoIniziale?.tempoCorrente || 0;
+
+  const diagramma = document.querySelector("#diagramma tbody");
+  diagramma.innerHTML = "";
+
+  return setInterval(() => {
+    let processoDaEseguire = null;
+    let tempoRimanenteMinimo = Infinity;
+
+    for (const processo of processiInEsecuzione) {
+      if (
+        !processo.completato &&
+        processo.arrivo <= tempoCorrente &&
+        processo.tempoRimanente < tempoRimanenteMinimo
+      ) {
+        processoDaEseguire = processo;
+        tempoRimanenteMinimo = processo.tempoRimanente;
+      }
+    }
+
+    if (processoDaEseguire) {
+      processoDaEseguire.tempoRimanente--;
+      processoDaEseguire.esecuzioni.push(tempoCorrente);
+
+      if (processoDaEseguire.tempoRimanente === 0) {
+        processoDaEseguire.completato = true;
+        processoDaEseguire.tempoCompletamento = tempoCorrente + 1;
+        processoDaEseguire.turnAroundTime = processoDaEseguire.tempoCompletamento - processoDaEseguire.arrivo;
+        processoDaEseguire.tempoAttesa = processoDaEseguire.turnAroundTime - processoDaEseguire.durata;
+      }
+
+      aggiornaVisualizzazione(processiInEsecuzione, tempoCorrente);
+    }
+
+    tempoCorrente++;
+
+    if (processiInEsecuzione.every(p => p.completato)) {
+      aggiornaVisualizzazione(processiInEsecuzione, tempoCorrente);
+      clearInterval(intervalloSimulazione);
+    }
+
+    statoSimulazione = {
+      processiInEsecuzione,
+      tempoCorrente
+    };
+  }, clock);
+}
+
 function aggiornaVisualizzazione(processi, tempo, processoCorrenteIndex) {
   const diagramma = document.querySelector("#diagramma tbody");
   diagramma.innerHTML = "";
-  
+
   const tempoMassimo = Math.max(...processi.map(p => p.tempoCompletamento || 0), tempo);
 
   processi.forEach((p, index) => {
