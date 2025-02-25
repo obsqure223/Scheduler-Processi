@@ -89,20 +89,29 @@ button:hover {
 
 /* Contenitore del diagramma */
 .diagramma-container {
+  margin-bottom: 30px; /* Spazio sotto il diagramma */
+}
+
+/* Titolo del diagramma */
+.diagramma-container h2 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #22313f; /* Colore del testo (blu scuro) */
+  margin-bottom: 10px; /* Spazio tra titolo e tabella */
+}
+
+/* Contenitore scorrevole del diagramma */
+.diagramma-scrollable {
   overflow-x: auto; /* Abilita lo scorrimento orizzontale */
   overflow-y: hidden; /* Disabilita lo scorrimento verticale */
   border-radius: 15px;
-  padding: 20px;
-}
-
-/* Tabella del diagramma (scorrevole) */
-.diagramma-scrollable {
-  min-width: 800px; /* Larghezza minima per forzare lo scorrimento */
+  background: #e4f1fe; /* Colore di sfondo uniforme con il resto della pagina */
+  padding: 20px 0; /* Padding solo sopra e sotto, non ai lati */
 }
 
 /* Stili per la tabella del diagramma */
 #diagramma {
-  width: 100%;
+  width: 100%; /* Occupa tutto lo spazio disponibile */
   border-collapse: separate;
   border-spacing: 0;
   background: #ffffff; /* Sfondo bianco per la tabella */
