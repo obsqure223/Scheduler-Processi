@@ -44,7 +44,7 @@ function aggiornaTabellaProcessi() {
     const row = document.createElement("tr");
 
     const cellNome = document.createElement("td");
-    cellNome.innerHTML = <strong>${p.nome}</strong>;
+    cellNome.innerHTML = `<strong>${p.nome}</strong>`;
     row.appendChild(cellNome);
 
     const cellArrivo = document.createElement("td");
