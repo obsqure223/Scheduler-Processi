@@ -92,7 +92,6 @@ button:hover {
   overflow-x: auto; /* Abilita lo scorrimento orizzontale */
   overflow-y: hidden; /* Disabilita lo scorrimento verticale */
   border-radius: 15px;
-  background: #34495e; /* Colore di sfondo del diagramma */
   padding: 20px;
 }
 
