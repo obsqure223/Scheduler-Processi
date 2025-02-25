@@ -1,5 +1,7 @@
 const processi = [];
 let intervalloSimulazione = null;
+let simulazioneInPausa = false;
+let statoSimulazione = null;
 
 function numeroCasuale(max) {
   return Math.floor(Math.random() * max);
@@ -69,15 +71,31 @@ document.getElementById("ferma-simulazione").addEventListener("click", () => {
   fermaSimulazione();
 });
 
+document.getElementById("metti-in-pausa").addEventListener("click", () => {
+  mettiInPausaSimulazione();
+});
+
 function avviaSimulazione() {
   const algoritmo = document.getElementById("algoritmo").value;
   const quanto = Number(document.getElementById("quanto").value);
   const clock = Number(document.getElementById("clock").value);
 
-  if (algoritmo === "Round Robin") {
-    intervalloSimulazione = simulaRoundRobin(quanto, clock);
-  } else if (algoritmo === "Priorità") {
-    intervalloSimulazione = simulaPriorita(clock);
+  if (simulazioneInPausa) {
+    // Riprendi la simulazione dallo stato memorizzato
+    if (algoritmo === "Round Robin") {
+      intervalloSimulazione = simulaRoundRobin(quanto, clock, statoSimulazione);
+    } else if (algoritmo === "Priorità") {
+      intervalloSimulazione = simulaPriorita(clock, statoSimulazione);
+    }
+    simulazioneInPausa = false;
+    statoSimulazione = null;
+  } else {
+    // Avvia una nuova simulazione
+    if (algoritmo === "Round Robin") {
+      intervalloSimulazione = simulaRoundRobin(quanto, clock);
+    } else if (algoritmo === "Priorità") {
+      intervalloSimulazione = simulaPriorita(clock);
+    }
   }
 }
 
@@ -85,21 +103,33 @@ function fermaSimulazione() {
   if (intervalloSimulazione) {
     clearInterval(intervalloSimulazione);
     intervalloSimulazione = null;
+    simulazioneInPausa = false;
+    statoSimulazione = null;
     console.log("Simulazione fermata.");
   } else {
     console.log("Nessuna simulazione in corso.");
   }
 }
 
-function simulaPriorita(clock) {
-  const processiInEsecuzione = processi.map(p => ({
+function mettiInPausaSimulazione() {
+  if (intervalloSimulazione && !simulazioneInPausa) {
+    clearInterval(intervalloSimulazione);
+    simulazioneInPausa = true;
+    console.log("Simulazione in pausa.");
+  } else {
+    console.log("Nessuna simulazione in corso o già in pausa.");
+  }
+}
+
+function simulaPriorita(clock, statoIniziale = null) {
+  const processiInEsecuzione = statoIniziale?.processiInEsecuzione || processi.map(p => ({
     ...p,
     tempoRimanente: p.durata,
     completato: false,
     esecuzioni: []
   }));
 
-  let tempoCorrente = 0;
+  let tempoCorrente = statoIniziale?.tempoCorrente || 0;
 
   const diagramma = document.querySelector("#diagramma tbody");
   diagramma.innerHTML = "";
@@ -139,19 +169,25 @@ function simulaPriorita(clock) {
       clearInterval(intervalloSimulazione);
       mostraRisultatiFinali(processiInEsecuzione);
     }
+
+    // Memorizza lo stato corrente per la pausa
+    statoSimulazione = {
+      processiInEsecuzione,
+      tempoCorrente
+    };
   }, clock);
 }
 
-function simulaRoundRobin(quanto, clock) {
-  const processiInEsecuzione = processi.map(p => ({
+function simulaRoundRobin(quanto, clock, statoIniziale = null) {
+  const processiInEsecuzione = statoIniziale?.processiInEsecuzione || processi.map(p => ({
     ...p,
     tempoRimanente: p.durata,
     completato: false,
     quantumUsato: 0,
     esecuzioni: []
   }));
-  let tempoCorrente = 0;
-  let indiceProcessoCorrente = 0;
+  let tempoCorrente = statoIniziale?.tempoCorrente || 0;
+  let indiceProcessoCorrente = statoIniziale?.indiceProcessoCorrente || 0;
 
   const diagramma = document.querySelector("#diagramma tbody");
   diagramma.innerHTML = "";
@@ -194,6 +230,13 @@ function simulaRoundRobin(quanto, clock) {
       clearInterval(intervalloSimulazione);
       mostraRisultatiFinali(processiInEsecuzione);
     }
+
+    // Memorizza lo stato corrente per la pausa
+    statoSimulazione = {
+      processiInEsecuzione,
+      tempoCorrente,
+      indiceProcessoCorrente
+    };
   }, clock);
 }
 
