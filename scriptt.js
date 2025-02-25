@@ -1,31 +1,8 @@
+
 const processi = [];
 let intervalloSimulazione = null;
 let simulazioneInPausa = false;
 let statoSimulazione = null;
-
-// Seleziona i pulsanti
-const avviaSimulazioneBtn = document.getElementById("avvia-simulazione");
-const mettiInPausaBtn = document.getElementById("metti-in-pausa");
-
-// Funzione per gestire il clic su "Metti in Pausa"
-mettiInPausaBtn.addEventListener("click", () => {
-  if (simulazioneInPausa) {
-    avviaSimulazione();
-    mettiInPausaBtn.textContent = "Metti in Pausa";
-  } else {
-    mettiInPausaSimulazione();
-    mettiInPausaBtn.textContent = "Riprendi Simulazione";
-  }
-});
-
-function mettiInPausaSimulazione() {
-  if (intervalloSimulazione) {
-    clearInterval(intervalloSimulazione);
-    intervalloSimulazione = null;
-    simulazioneInPausa = true;
-    console.log("Simulazione in pausa.");
-  }
-}
 
 function numeroCasuale(max) {
   return Math.floor(Math.random() * max);
@@ -37,29 +14,33 @@ function creaProcessi() {
   const arrivoMax = Number(document.getElementById("arrivo-massimo").value);
   const prioritaMax = Number(document.getElementById("priorita-massima").value);
 
-  processi.length = 0; // Svuota l'array dei processi
+  processi.length = 0;
 
-  // Crea i processi
-  for (let i = 0; i < numProcessi; i++) {
+  processi.push({
+    nome: "P1",
+    arrivo: 0,
+    durata: numeroCasuale(durataMax) + 1,
+    priorita: numeroCasuale(prioritaMax) + 1
+  });
+
+  for (let i = 1; i < numProcessi; i++) {
     processi.push({
-      nome: "P" + (i + 1), // Assegna i nomi P1, P2, P3, ...
-      arrivo: i === 0 ? 0 : numeroCasuale(arrivoMax + 1), // P1 arriva al tempo 0
+      nome: "P" + (i + 1),
+      arrivo: numeroCasuale(arrivoMax + 1),
       durata: numeroCasuale(durataMax) + 1,
       priorita: numeroCasuale(prioritaMax) + 1
     });
   }
 
-  // Ordina i processi per nome (P1, P2, P3, ...)
-  processi.sort((a, b) => a.nome.localeCompare(b.nome));
+  processi.sort((a, b) => a.arrivo - b.arrivo);
 
-  aggiornaTabellaProcessi(); // Aggiorna la tabella
+  aggiornaTabellaProcessi();
 }
 
 function aggiornaTabellaProcessi() {
   const tbody = document.querySelector("#coda tbody");
   tbody.innerHTML = "";
 
-  // Itera sui processi già ordinati
   for (let p of processi) {
     const row = document.createElement("tr");
 
@@ -89,6 +70,10 @@ document.getElementById("avvia-simulazione").addEventListener("click", () => {
 
 document.getElementById("ferma-simulazione").addEventListener("click", () => {
   fermaSimulazione();
+});
+
+document.getElementById("metti-in-pausa").addEventListener("click", () => {
+  mettiInPausaSimulazione();
 });
 
 function avviaSimulazione() {
@@ -140,8 +125,18 @@ function fermaSimulazione() {
   }
 }
 
+function mettiInPausaSimulazione() {
+  if (intervalloSimulazione && !simulazioneInPausa) {
+    clearInterval(intervalloSimulazione);
+    simulazioneInPausa = true;
+    console.log("Simulazione in pausa.");
+  } else {
+    console.log("Nessuna simulazione in corso o già in pausa.");
+  }
+}
+
 function simulaFCFS(clock, statoIniziale = null) {
-  const processiInEsecuzione = processi.map(p => ({
+  const processiInEsecuzione = statoIniziale?.processiInEsecuzione || processi.map(p => ({
     ...p,
     tempoRimanente: p.durata,
     completato: false,
@@ -192,7 +187,7 @@ function simulaFCFS(clock, statoIniziale = null) {
 }
 
 function simulaPriorita(clock, statoIniziale = null) {
-  const processiInEsecuzione = processi.map(p => ({
+  const processiInEsecuzione = statoIniziale?.processiInEsecuzione || processi.map(p => ({
     ...p,
     tempoRimanente: p.durata,
     completato: false,
@@ -248,7 +243,7 @@ function simulaPriorita(clock, statoIniziale = null) {
 }
 
 function simulaRoundRobin(quanto, clock, statoIniziale = null) {
-  const processiInEsecuzione = processi.map(p => ({
+  const processiInEsecuzione = statoIniziale?.processiInEsecuzione || processi.map(p => ({
     ...p,
     tempoRimanente: p.durata,
     completato: false,
@@ -311,13 +306,10 @@ function simulaRoundRobin(quanto, clock, statoIniziale = null) {
 function aggiornaVisualizzazione(processi, tempo, processoCorrenteIndex) {
   const diagramma = document.querySelector("#diagramma tbody");
   diagramma.innerHTML = "";
+  
+  const tempoMassimo = Math.max(...processi.map(p => p.tempoCompletamento || 0), tempo);
 
-  // Ordina i processi per nome (P1, P2, P3, ...)
-  const processiOrdinati = [...processi].sort((a, b) => a.nome.localeCompare(b.nome));
-
-  const tempoMassimo = Math.max(...processiOrdinati.map(p => p.tempoCompletamento || 0), tempo);
-
-  processiOrdinati.forEach((p, index) => {
+  processi.forEach((p, index) => {
     const row = document.createElement("tr");
 
     row.innerHTML = `
@@ -352,47 +344,4 @@ function aggiornaVisualizzazione(processi, tempo, processoCorrenteIndex) {
     row.appendChild(timelineCell);
     diagramma.appendChild(row);
   });
-}
-
-function mostraRisultatiFinali(processiInEsecuzione) {
-  const risultatiDiv = document.getElementById("risultati-finali");
-  risultatiDiv.innerHTML = ""; // Pulisci il contenuto precedente
-
-  // Crea una tabella per visualizzare i risultati
-  const table = document.createElement("table");
-  table.innerHTML = `
-    <thead>
-      <tr>
-        <th>Processo</th>
-        <th>Tempo di Arrivo</th>
-        <th>Durata</th>
-        <th>Priorità</th>
-        <th>Tempo di Completamento</th>
-        <th>Turnaround Time</th>
-        <th>Tempo di Attesa</th>
-      </tr>
-    </thead>
-    <tbody>
-    </tbody>
-  `;
-
-  const tbody = table.querySelector("tbody");
-
-  // Aggiungi una riga per ogni processo
-  for (const processo of processiInEsecuzione) {
-    const row = document.createElement("tr");
-    row.innerHTML = `
-      <td>${processo.nome}</td>
-      <td>${processo.arrivo}</td>
-      <td>${processo.durata}</td>
-      <td>${processo.priorita}</td>
-      <td>${processo.tempoCompletamento}</td>
-      <td>${processo.turnAroundTime}</td>
-      <td>${processo.tempoAttesa}</td>
-    `;
-    tbody.appendChild(row);
-  }
-
-  // Aggiungi la tabella all'area dei risultati
-  risultatiDiv.appendChild(table);
 }
