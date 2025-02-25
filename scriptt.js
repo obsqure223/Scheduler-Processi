@@ -1,4 +1,5 @@
 const processi = [];
+let intervalloSimulazione = null;
 
 function numeroCasuale(max) {
   return Math.floor(Math.random() * max);
@@ -64,15 +65,29 @@ document.getElementById("avvia-simulazione").addEventListener("click", () => {
   avviaSimulazione();
 });
 
+document.getElementById("ferma-simulazione").addEventListener("click", () => {
+  fermaSimulazione();
+});
+
 function avviaSimulazione() {
   const algoritmo = document.getElementById("algoritmo").value;
   const quanto = Number(document.getElementById("quanto").value);
   const clock = Number(document.getElementById("clock").value);
 
   if (algoritmo === "Round Robin") {
-    simulaRoundRobin(quanto, clock);
-  } else if (algoritmo === "PrioritÃ ") {
-    simulaPriorita(clock);
+    intervalloSimulazione = simulaRoundRobin(quanto, clock);
+  } else if (algoritmo === "Priorità") {
+    intervalloSimulazione = simulaPriorita(clock);
+  }
+}
+
+function fermaSimulazione() {
+  if (intervalloSimulazione) {
+    clearInterval(intervalloSimulazione);
+    intervalloSimulazione = null;
+    console.log("Simulazione fermata.");
+  } else {
+    console.log("Nessuna simulazione in corso.");
   }
 }
 
@@ -89,7 +104,7 @@ function simulaPriorita(clock) {
   const diagramma = document.querySelector("#diagramma tbody");
   diagramma.innerHTML = "";
 
-  const intervallo = setInterval(() => {
+  return setInterval(() => {
     let processoMigliore = null;
     let prioritaMigliore = Infinity;
 
@@ -121,7 +136,7 @@ function simulaPriorita(clock) {
 
     if (processiInEsecuzione.every(p => p.completato)) {
       aggiornaVisualizzazione(processiInEsecuzione, tempoCorrente);
-      clearInterval(intervallo);
+      clearInterval(intervalloSimulazione);
       mostraRisultatiFinali(processiInEsecuzione);
     }
   }, clock);
@@ -141,7 +156,7 @@ function simulaRoundRobin(quanto, clock) {
   const diagramma = document.querySelector("#diagramma tbody");
   diagramma.innerHTML = "";
 
-  const intervallo = setInterval(() => {
+  return setInterval(() => {
     let processoTrovato = false;
     let contatore = 0;
 
@@ -176,7 +191,7 @@ function simulaRoundRobin(quanto, clock) {
 
     if (processiInEsecuzione.every(p => p.completato)) {
       aggiornaVisualizzazione(processiInEsecuzione, tempoCorrente);
-      clearInterval(intervallo);
+      clearInterval(intervalloSimulazione);
       mostraRisultatiFinali(processiInEsecuzione);
     }
   }, clock);
