@@ -13,27 +13,22 @@ function creaProcessi() {
   const arrivoMax = Number(document.getElementById("arrivo-massimo").value);
   const prioritaMax = Number(document.getElementById("priorita-massima").value);
 
-  processi.length = 0;
+  processi.length = 0; // Svuota l'array dei processi
 
-  processi.push({
-    nome: "P1",
-    arrivo: 0,
-    durata: numeroCasuale(durataMax) + 1,
-    priorita: numeroCasuale(prioritaMax) + 1
-  });
-
-  for (let i = 1; i < numProcessi; i++) {
+  // Crea i processi
+  for (let i = 0; i < numProcessi; i++) {
     processi.push({
-      nome: "P" + (i + 1),
-      arrivo: numeroCasuale(arrivoMax + 1),
+      nome: "P" + (i + 1), // Assegna i nomi P1, P2, P3, ...
+      arrivo: i === 0 ? 0 : numeroCasuale(arrivoMax + 1), // P1 arriva al tempo 0
       durata: numeroCasuale(durataMax) + 1,
       priorita: numeroCasuale(prioritaMax) + 1
     });
   }
 
-  processi.sort((a, b) => a.arrivo - b.arrivo);
+  // Ordina i processi per nome (P1, P2, P3, ...)
+  processi.sort((a, b) => a.nome.localeCompare(b.nome));
 
-  aggiornaTabellaProcessi();
+  aggiornaTabellaProcessi(); // Aggiorna la tabella
 }
 
 function aggiornaTabellaProcessi() {
