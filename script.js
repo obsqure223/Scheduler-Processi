@@ -39,6 +39,7 @@ function creaProcessi() {
 function aggiornaTabellaProcessi() {
   const tbody = document.querySelector("#coda tbody");
   tbody.innerHTML = "";
+  processi.sort((a, b) => a.nome.localeCompare(b.nome, undefined, { numeric: true }));
 
   for (let p of processi) {
     const row = document.createElement("tr");
