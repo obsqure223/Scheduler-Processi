@@ -336,7 +336,7 @@ function aggiornaVisualizzazione(processi, tempo, processoCorrenteIndex) {
       cell.style.border = "1px solid #ddd";
 
       if (p.esecuzioni && p.esecuzioni.includes(t)) {
-        cell.style.backgroundColor = "#FFD700";
+        cell.style.backgroundColor = "#70a9d6";
       }
       timeline.appendChild(cell);
     }
