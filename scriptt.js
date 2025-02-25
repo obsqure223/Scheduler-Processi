@@ -86,6 +86,8 @@ function avviaSimulazione() {
       intervalloSimulazione = simulaRoundRobin(quanto, clock, statoSimulazione);
     } else if (algoritmo === "Priorità") {
       intervalloSimulazione = simulaPriorita(clock, statoSimulazione);
+    } else if (algoritmo === "FCFS") {
+      intervalloSimulazione = simulaFCFS(clock, statoSimulazione);
     }
     simulazioneInPausa = false;
     statoSimulazione = null;
@@ -95,6 +97,8 @@ function avviaSimulazione() {
       intervalloSimulazione = simulaRoundRobin(quanto, clock);
     } else if (algoritmo === "Priorità") {
       intervalloSimulazione = simulaPriorita(clock);
+    } else if (algoritmo === "FCFS") {
+      intervalloSimulazione = simulaFCFS(clock);
     }
   }
 }
@@ -107,8 +111,8 @@ function fermaSimulazione() {
     statoSimulazione = null;
 
     // Cancella la coda dei processi
-    processi.length = 0; // Svuota l'array dei processi
-    aggiornaTabellaProcessi(); // Aggiorna la tabella per riflettere la coda vuota
+    processi.length = 0;
+    aggiornaTabellaProcessi();
 
     // Cancella il diagramma
     const diagramma = document.querySelector("#diagramma tbody");
@@ -128,6 +132,57 @@ function mettiInPausaSimulazione() {
   } else {
     console.log("Nessuna simulazione in corso o già in pausa.");
   }
+}
+
+function simulaFCFS(clock, statoIniziale = null) {
+  const processiInEsecuzione = statoIniziale?.processiInEsecuzione || processi.map(p => ({
+    ...p,
+    tempoRimanente: p.durata,
+    completato: false,
+    esecuzioni: []
+  }));
+
+  let tempoCorrente = statoIniziale?.tempoCorrente || 0;
+
+  const diagramma = document.querySelector("#diagramma tbody");
+  diagramma.innerHTML = "";
+
+  return setInterval(() => {
+    let processoDaEseguire = null;
+    for (const processo of processiInEsecuzione) {
+      if (!processo.completato && processo.arrivo <= tempoCorrente) {
+        processoDaEseguire = processo;
+        break;
+      }
+    }
+
+    if (processoDaEseguire) {
+      processoDaEseguire.tempoRimanente--;
+      processoDaEseguire.esecuzioni.push(tempoCorrente);
+
+      if (processoDaEseguire.tempoRimanente === 0) {
+        processoDaEseguire.completato = true;
+        processoDaEseguire.tempoCompletamento = tempoCorrente + 1;
+        processoDaEseguire.turnAroundTime = processoDaEseguire.tempoCompletamento - processoDaEseguire.arrivo;
+        processoDaEseguire.tempoAttesa = processoDaEseguire.turnAroundTime - processoDaEseguire.durata;
+      }
+
+      aggiornaVisualizzazione(processiInEsecuzione, tempoCorrente);
+    }
+
+    tempoCorrente++;
+
+    if (processiInEsecuzione.every(p => p.completato)) {
+      aggiornaVisualizzazione(processiInEsecuzione, tempoCorrente);
+      clearInterval(intervalloSimulazione);
+      mostraRisultatiFinali(processiInEsecuzione);
+    }
+
+    statoSimulazione = {
+      processiInEsecuzione,
+      tempoCorrente
+    };
+  }, clock);
 }
 
 function simulaPriorita(clock, statoIniziale = null) {
@@ -179,7 +234,6 @@ function simulaPriorita(clock, statoIniziale = null) {
       mostraRisultatiFinali(processiInEsecuzione);
     }
 
-    // Memorizza lo stato corrente per la pausa
     statoSimulazione = {
       processiInEsecuzione,
       tempoCorrente
@@ -240,7 +294,6 @@ function simulaRoundRobin(quanto, clock, statoIniziale = null) {
       mostraRisultatiFinali(processiInEsecuzione);
     }
 
-    // Memorizza lo stato corrente per la pausa
     statoSimulazione = {
       processiInEsecuzione,
       tempoCorrente,
