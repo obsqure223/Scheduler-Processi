@@ -39,13 +39,12 @@ function creaProcessi() {
 function aggiornaTabellaProcessi() {
   const tbody = document.querySelector("#coda tbody");
   tbody.innerHTML = "";
-  processi.sort((a, b) => a.nome.localeCompare(b.nome, undefined, { numeric: true }));
 
   for (let p of processi) {
     const row = document.createElement("tr");
 
     const cellNome = document.createElement("td");
-    cellNome.innerHTML = `<strong>${p.nome}</strong>`;
+    cellNome.innerHTML = <strong>${p.nome}</strong>;
     row.appendChild(cellNome);
 
     const cellArrivo = document.createElement("td");
