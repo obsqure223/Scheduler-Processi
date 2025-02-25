@@ -172,7 +172,7 @@ function simulaFCFS(clock, statoIniziale = null) {
     if (processiInEsecuzione.every(p => p.completato)) {
       aggiornaVisualizzazione(processiInEsecuzione, tempoCorrente);
       clearInterval(intervalloSimulazione);
-      mostraRisultatiFinali(processiInEsecuzione);
+     // mostraRisultatiFinali(processiInEsecuzione);
     }
 
     statoSimulazione = {
