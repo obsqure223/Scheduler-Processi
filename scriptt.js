@@ -9,18 +9,10 @@ const mettiInPausaBtn = document.getElementById("metti-in-pausa");
 
 // Funzione per gestire il clic su "Metti in Pausa"
 mettiInPausaBtn.addEventListener("click", () => {
-  if (!simulazioneInPausa) {
-    // Metti in pausa la simulazione
-    simulazioneInPausa = true;
-    mettiInPausaBtn.textContent = "Riprendi Simulazione"; // Cambia il testo del pulsante
-    avviaSimulazioneBtn.textContent = "Riprendi Simulazione"; // Cambia il testo di "Avvia Simulazione"
-    clearInterval(intervalloSimulazione); // Ferma l'intervallo di simulazione
+  if (avviaSimulazioneBtn.textContent === "Avvia Simulazione") {
+    avviaSimulazioneBtn.textContent = "Riprendi Simulazione"; // Cambia il testo del pulsante
   } else {
-    // Riprendi la simulazione
-    simulazioneInPausa = false;
-    mettiInPausaBtn.textContent = "Metti in Pausa"; // Ripristina il testo del pulsante
-    avviaSimulazioneBtn.textContent = "Avvia Simulazione"; // Ripristina il testo di "Avvia Simulazione"
-    avviaSimulazione(); // Riprende la simulazione
+    avviaSimulazioneBtn.textContent = "Avvia Simulazione"; // Ripristina il testo del pulsante
   }
 });
 
@@ -104,8 +96,6 @@ function avviaSimulazione() {
     }
     simulazioneInPausa = false;
     statoSimulazione = null;
-    avviaSimulazioneBtn.textContent = "Avvia Simulazione"; // Ripristina il testo del pulsante
-    mettiInPausaBtn.textContent = "Metti in Pausa"; // Ripristina il testo del pulsante
   } else {
     // Avvia una nuova simulazione
     if (algoritmo === "Round Robin") {
