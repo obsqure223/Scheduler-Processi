@@ -82,7 +82,6 @@ function avviaSimulazione() {
   const clock = Number(document.getElementById("clock").value);
 
   if (simulazioneInPausa) {
-    // Riprendi la simulazione dallo stato memorizzato
     if (algoritmo === "Round Robin") {
       intervalloSimulazione = simulaRoundRobin(quanto, clock, statoSimulazione);
     } else if (algoritmo === "Priorità") {
@@ -93,7 +92,6 @@ function avviaSimulazione() {
     simulazioneInPausa = false;
     statoSimulazione = null;
   } else {
-    // Avvia una nuova simulazione
     if (algoritmo === "Round Robin") {
       intervalloSimulazione = simulaRoundRobin(quanto, clock);
     } else if (algoritmo === "Priorità") {
@@ -111,11 +109,9 @@ function fermaSimulazione() {
     simulazioneInPausa = false;
     statoSimulazione = null;
 
-    // Cancella la coda dei processi
     processi.length = 0;
     aggiornaTabellaProcessi();
 
-    // Cancella il diagramma
     const diagramma = document.querySelector("#diagramma tbody");
     diagramma.innerHTML = "";
 
