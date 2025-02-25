@@ -75,46 +75,9 @@ button:hover {
   box-shadow: 0 8px 20px rgba(112, 169, 214, 0.4);
 }
 
-/* Contenitore per la coda */
 .table-container {
   margin-top: 40px;
-  position: relative; /* Necessario per la posizione della coda */
-}
-
-/* Contenitore separato per il diagramma */
-.diagram-container {
-  overflow-x: auto;  /* Scorrimento solo per il diagramma */
-  white-space: nowrap; /* Impedisce che il contenuto vada a capo */
-  max-width: 100%;
-}
-
-/* La coda fissa nella parte superiore */
-.coda {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  background: #ffffff; /* Colore di sfondo della coda */
-  border-bottom: 2px solid #34495e; /* Separatore tra coda e diagramma */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  width: 100%;
-}
-
-.coda table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-/* Se vuoi che la tabella si scrolli solo orizzontalmente */
-#diagramma {
   overflow-x: auto;
-  white-space: nowrap;  /* Non permettere la rottura delle righe */
-  max-width: 100%;
-}
-
-#diagramma td {
-  min-width: 30px;  /* Larghezza minima delle celle */
-  text-align: center;
-  border: 1px solid #ddd;
 }
 
 table {
