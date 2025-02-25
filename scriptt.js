@@ -105,7 +105,16 @@ function fermaSimulazione() {
     intervalloSimulazione = null;
     simulazioneInPausa = false;
     statoSimulazione = null;
-    console.log("Simulazione fermata.");
+
+    // Cancella la coda dei processi
+    processi.length = 0; // Svuota l'array dei processi
+    aggiornaTabellaProcessi(); // Aggiorna la tabella per riflettere la coda vuota
+
+    // Cancella il diagramma
+    const diagramma = document.querySelector("#diagramma tbody");
+    diagramma.innerHTML = "";
+
+    console.log("Simulazione fermata e coda cancellata.");
   } else {
     console.log("Nessuna simulazione in corso.");
   }
