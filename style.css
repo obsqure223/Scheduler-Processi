@@ -13,7 +13,7 @@ body {
   max-width: 1200px;
   margin: auto;
   background: rgba(255, 255, 255, 0.7);
-  padding: 35px;
+  padding: 30px;
   border-radius: 20px;
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(10px);
@@ -22,10 +22,10 @@ body {
 
 header {
   text-align: center;
-  font-size: 36px;
+  font-size: 30px;
   font-weight: 700;
   color: #444444;
-  margin-bottom: 35px;
+  margin-bottom: 30px;
   text-transform: uppercase;
   letter-spacing: 2px;
 }
@@ -33,7 +33,7 @@ header {
 .form-section {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
+  gap: 15px;
   margin-bottom: 30px;
 }
 
@@ -43,11 +43,11 @@ header {
 
 input, select {
   width: 100%;
-  padding: 10px 12px;
+  padding: 6px 10px;  /* Ridotto padding */
   border: 2px solid rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
-  font-size: 14px;
-  background: #B3E5FC;
+  border-radius: 8px;  /* Bordo più arrotondato */
+  font-size: 12px;  /* Ridotto font size */
+  background: #ffffff;  /* Impostato bianco come sfondo */
   color: #333333;
   transition: all 0.3s ease;
   font-family: 'Poppins', sans-serif;
@@ -55,8 +55,8 @@ input, select {
 
 input[type="number"], select[name="algoritmo_scheduling"] {
   width: 80%;
-  padding: 8px 10px;
-  font-size: 13px;
+  padding: 6px 8px;  /* Ridotto padding */
+  font-size: 12px;  /* Ridotto font size */
 }
 
 input:focus, select:focus {
@@ -67,13 +67,13 @@ input:focus, select:focus {
 }
 
 button {
-  padding: 10px 20px;
+  padding: 8px 15px;  /* Ridotto padding */
   border: none;
   background: linear-gradient(135deg, #26C6DA 0%, #00ACC1 100%);
   color: #ffffff;
-  border-radius: 10px;
+  border-radius: 8px;  /* Bordo più arrotondato */
   cursor: pointer;
-  font-size: 13px;
+  font-size: 12px;  /* Ridotto font size */
   font-weight: 600;
   transition: all 0.3s ease;
 }
@@ -97,10 +97,10 @@ table {
 }
 
 th, td {
-  padding: 15px 20px;
+  padding: 10px 15px;  /* Ridotto padding */
   border: 1px solid rgba(0, 0, 0, 0.1);
   text-align: center;
-  font-size: 14px;
+  font-size: 12px;  /* Ridotto font size */
   color: #444444;
 }
 
@@ -114,6 +114,13 @@ tr:nth-child(even) {
 
 tr:hover {
   background: rgba(0, 0, 0, 0.08);
+}
+
+/* Cella coda e diagramma con bordi tondi */
+.coda-diagramma {
+  border-radius: 15px;  /* Bordo tondo */
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.8);
 }
 
 @media (max-width: 768px) {
