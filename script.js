@@ -15,16 +15,9 @@ function creaProcessi() {
 
   processi.length = 0;
 
-  processi.push({
-    nome: "P1",
-    arrivo: 0,
-    durata: numeroCasuale(durataMax) + 1,
-    priorita: numeroCasuale(prioritaMax) + 1
-  });
-
-  for (let i = 1; i < numProcessi; i++) {
+  for (let i = 0; i < numProcessi; i++) {
     processi.push({
-      nome: "P" + (i + 1),
+      nome: "P" + (i + 1), 
       arrivo: numeroCasuale(arrivoMax + 1),
       durata: numeroCasuale(durataMax) + 1,
       priorita: numeroCasuale(prioritaMax) + 1
@@ -32,6 +25,7 @@ function creaProcessi() {
   }
 
   processi.sort((a, b) => a.arrivo - b.arrivo);
+  processi.forEach((p, index) => p.nome = "P" + (index + 1));
 
   aggiornaTabellaProcessi();
 }
