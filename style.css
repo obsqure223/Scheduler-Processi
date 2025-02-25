@@ -75,9 +75,49 @@ button:hover {
   box-shadow: 0 8px 20px rgba(112, 169, 214, 0.4);
 }
 
+/* Contenitore per la coda */
 .table-container {
   margin-top: 40px;
+  overflow-x: auto;  /* Solo per la parte scrollabile */
+}
+
+/* Contenitore separato per il diagramma */
+.diagram-container {
+  overflow-x: auto;  /* Scorrimento solo per il diagramma */
+  white-space: nowrap; /* Impedisce che il contenuto vada a capo */
+}
+
+/* Rendi la coda sticky, per non farla muovere mentre scorri */
+#coda {
+  position: sticky;
+  top: 0;
+  background: #ffffff; /* Colore di sfondo della coda */
+  z-index: 10;
+  border-bottom: 2px solid #34495e; /* Aggiungi bordi per separare */
+}
+
+#coda table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Se vuoi che la tabella si scrolli solo orizzontalmente */
+#coda table, #diagramma table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Abilita lo scorrimento orizzontale per il diagramma */
+#diagramma {
   overflow-x: auto;
+  white-space: nowrap;  /* Non permettere la rottura delle righe */
+  max-width: 100%;
+}
+
+#diagramma td {
+  min-width: 30px;  /* Larghezza minima delle celle */
+  text-align: center;
+  border: 1px solid #ddd;
 }
 
 table {
