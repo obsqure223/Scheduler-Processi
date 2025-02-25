@@ -62,7 +62,7 @@ input:focus, select:focus {
 button {
   padding: 8px 15px;
   border: none;
-  background: #8dc6ff; /* Colore dei tasti (celeste scuro) */
+  background: #70a9d6; /* Colore dei tasti più scuro (blu più intenso) */
   color: #ffffff;
   border-radius: 8px;
   cursor: pointer;
@@ -73,7 +73,7 @@ button {
 
 button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(141, 198, 255, 0.4);
+  box-shadow: 0 8px 20px rgba(112, 169, 214, 0.4);
 }
 
 .table-container {
