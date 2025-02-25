@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
+/* Stili globali */
 body {
   font-family: 'Poppins', sans-serif;
   margin: 0;
@@ -9,6 +10,7 @@ body {
   min-height: 100vh;
 }
 
+/* Container principale */
 .container {
   max-width: 1200px;
   margin: auto;
@@ -17,6 +19,7 @@ body {
   box-shadow: none;  /* Rimosso il box-shadow */
 }
 
+/* Header */
 header {
   text-align: center;
   font-size: 30px;
@@ -27,6 +30,7 @@ header {
   letter-spacing: 2px;
 }
 
+/* Sezione del form */
 .form-section {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -34,6 +38,7 @@ header {
   margin-bottom: 30px;
 }
 
+/* Stili per input e select */
 input, select {
   width: 100%;
   padding: 6px 10px;
@@ -58,6 +63,7 @@ input:focus, select:focus {
   background: rgba(255, 255, 255, 0.6);
 }
 
+/* Stili per i pulsanti */
 button {
   padding: 8px 15px;
   border: none;
@@ -75,50 +81,106 @@ button:hover {
   box-shadow: 0 8px 20px rgba(112, 169, 214, 0.4);
 }
 
-.table-container {
-  margin-top: 40px;
-  overflow-x: auto;
+/* Contenitore della coda */
+.coda-container {
+  margin-bottom: 30px; /* Spazio tra coda e diagramma */
+  overflow: hidden; /* Impedisce lo scorrimento orizzontale */
 }
 
-table {
+/* Contenitore del diagramma */
+.diagramma-container {
+  overflow-x: auto; /* Abilita lo scorrimento orizzontale */
+  overflow-y: hidden; /* Disabilita lo scorrimento verticale */
+  border-radius: 15px;
+  background: #34495e; /* Colore di sfondo del diagramma */
+  padding: 20px;
+}
+
+/* Tabella del diagramma (scorrevole) */
+.diagramma-scrollable {
+  min-width: 800px; /* Larghezza minima per forzare lo scorrimento */
+}
+
+/* Stili per la tabella del diagramma */
+#diagramma {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  border-radius: 15px;
   background: #ffffff; /* Sfondo bianco per la tabella */
+  color: #34495e; /* Testo nelle celle (grigio scuro) */
 }
 
-th, td {
+/* Stili per le celle del diagramma */
+#diagramma th,
+#diagramma td {
   padding: 10px 15px;
   border: 1px solid rgba(0, 0, 0, 0.1);
   text-align: center;
   font-size: 12px;
-  color: #34495e; /* Testo nelle celle (grigio scuro) */
 }
 
-th {
+/* Intestazioni del diagramma */
+#diagramma th {
   background: #22313f; /* Intestazioni della tabella (blu scuro) */
   color: #ffffff; /* Testo nelle intestazioni (bianco) */
 }
 
-tr:nth-child(even) {
-  background: #e4f1fe;  /* Righe pari con sfondo celeste chiaro */
+/* Righe pari del diagramma */
+#diagramma tr:nth-child(even) {
+  background: #e4f1fe; /* Righe pari con sfondo celeste chiaro */
 }
 
-tr:hover {
-  background: #8dc6ff;  /* Righe con passaggio del mouse (celeste scuro) */
+/* Effetto hover sulle righe del diagramma */
+#diagramma tr:hover {
+  background: #8dc6ff; /* Righe con passaggio del mouse (celeste scuro) */
 }
 
-/* Coda e diagramma con bordi tondi */
-.coda-diagramma {
-  border-radius: 15px;
-  padding: 20px;
-  background: #34495e;  /* Grigio scuro per la coda e il diagramma */
-  color: #ffffff;
+/* Stili per la tabella della coda */
+#coda {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: #ffffff; /* Sfondo bianco per la tabella */
+  color: #34495e; /* Testo nelle celle (grigio scuro) */
+  margin-bottom: 30px; /* Spazio tra coda e diagramma */
 }
 
+/* Stili per le celle della coda */
+#coda th,
+#coda td {
+  padding: 10px 15px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  text-align: center;
+  font-size: 12px;
+}
+
+/* Intestazioni della coda */
+#coda th {
+  background: #22313f; /* Intestazioni della tabella (blu scuro) */
+  color: #ffffff; /* Testo nelle intestazioni (bianco) */
+}
+
+/* Righe pari della coda */
+#coda tr:nth-child(even) {
+  background: #e4f1fe; /* Righe pari con sfondo celeste chiaro */
+}
+
+/* Effetto hover sulle righe della coda */
+#coda tr:hover {
+  background: #8dc6ff; /* Righe con passaggio del mouse (celeste scuro) */
+}
+
+/* Media query per dispositivi mobili */
 @media (max-width: 768px) {
   .container {
     padding: 20px;
+  }
+
+  .form-section {
+    grid-template-columns: 1fr; /* Una colonna per dispositivi mobili */
+  }
+
+  .diagramma-scrollable {
+    min-width: 100%; /* Adatta la larghezza al dispositivo mobile */
   }
 }
