@@ -1,65 +1,62 @@
-const listaProcessi = []; // Array che conterrà i processi
+const processi = [];
 
-function generaNumeroCasuale(massimo) {
-  return Math.floor(Math.random() * massimo);
+function numeroCasuale(max) {
+  return Math.floor(Math.random() * max);
 }
 
 function creaProcessi() {
-  const numeroProcessi = Number(document.getElementById("num-processi").value);
-  const durataMassima = Number(document.getElementById("durata-massima").value);
-  const arrivoMassimo = Number(document.getElementById("arrivo-massimo").value);
-  const prioritaMassima = Number(document.getElementById("priorita-massima").value);
+  const numProcessi = Number(document.getElementById("num-processi").value);
+  const durataMax = Number(document.getElementById("durata-massima").value);
+  const arrivoMax = Number(document.getElementById("arrivo-massimo").value);
+  const prioritaMax = Number(document.getElementById("priorita-massima").value);
 
-  listaProcessi.length = 0; // Svuota l'array dei processi
+  processi.length = 0;
 
-  // Aggiunge il primo processo con arrivo 0
-  listaProcessi.push({
+  processi.push({
     nome: "P1",
     arrivo: 0,
-    durata: generaNumeroCasuale(durataMassima) + 1,
-    priorita: generaNumeroCasuale(prioritaMassima) + 1
+    durata: numeroCasuale(durataMax) + 1,
+    priorita: numeroCasuale(prioritaMax) + 1
   });
 
-  // Aggiunge gli altri processi
-  for (let i = 1; i < numeroProcessi; i++) {
-    listaProcessi.push({
+  for (let i = 1; i < numProcessi; i++) {
+    processi.push({
       nome: "P" + (i + 1),
-      arrivo: generaNumeroCasuale(arrivoMassimo + 1),
-      durata: generaNumeroCasuale(durataMassima) + 1,
-      priorita: generaNumeroCasuale(prioritaMassima) + 1
+      arrivo: numeroCasuale(arrivoMax + 1),
+      durata: numeroCasuale(durataMax) + 1,
+      priorita: numeroCasuale(prioritaMax) + 1
     });
   }
 
-  // Ordina i processi per tempo di arrivo
-  listaProcessi.sort((a, b) => a.arrivo - b.arrivo);
+  processi.sort((a, b) => a.arrivo - b.arrivo);
 
   aggiornaTabellaProcessi();
 }
 
 function aggiornaTabellaProcessi() {
-  const corpoTabella = document.querySelector("#coda tbody");
-  corpoTabella.innerHTML = "";
+  const tbody = document.querySelector("#coda tbody");
+  tbody.innerHTML = "";
 
-  for (let processo of listaProcessi) {
-    const riga = document.createElement("tr");
+  for (let p of processi) {
+    const row = document.createElement("tr");
 
-    const cellaNome = document.createElement("td");
-    cellaNome.innerHTML = `<strong>${processo.nome}</strong>`;
-    riga.appendChild(cellaNome);
+    const cellNome = document.createElement("td");
+    cellNome.innerHTML = `<strong>${p.nome}</strong>`;
+    row.appendChild(cellNome);
 
-    const cellaArrivo = document.createElement("td");
-    cellaArrivo.textContent = processo.arrivo;
-    riga.appendChild(cellaArrivo);
+    const cellArrivo = document.createElement("td");
+    cellArrivo.textContent = p.arrivo;
+    row.appendChild(cellArrivo);
 
-    const cellaDurata = document.createElement("td");
-    cellaDurata.textContent = processo.durata;
-    riga.appendChild(cellaDurata);
+    const cellDurata = document.createElement("td");
+    cellDurata.textContent = p.durata;
+    row.appendChild(cellDurata);
 
-    const cellaPriorita = document.createElement("td");
-    cellaPriorita.textContent = processo.priorita;
-    riga.appendChild(cellaPriorita);
+    const cellPriorita = document.createElement("td");
+    cellPriorita.textContent = p.priorita;
+    row.appendChild(cellPriorita);
 
-    corpoTabella.appendChild(riga);
+    tbody.appendChild(row);
   }
 }
 
@@ -68,77 +65,77 @@ document.getElementById("avvia-simulazione").addEventListener("click", () => {
 });
 
 function avviaSimulazione() {
-  const algoritmoScelto = document.getElementById("algoritmo").value;
-  const quantoDiTempo = Number(document.getElementById("quanto").value);
-  const velocitaClock = Number(document.getElementById("clock").value);
+  const algoritmo = document.getElementById("algoritmo").value;
+  const quanto = Number(document.getElementById("quanto").value);
+  const clock = Number(document.getElementById("clock").value);
 
-  if (algoritmoScelto === "Round Robin") {
-    simulaRoundRobin(quantoDiTempo, velocitaClock);
-  } else if (algoritmoScelto === "Priorità") {
-    simulaPriorita(velocitaClock);
+  if (algoritmo === "Round Robin") {
+    simulaRoundRobin(quanto, clock);
+  } else if (algoritmo === "PrioritÃ ") {
+    simulaPriorita(clock);
   }
 }
 
-function simulaPriorita(velocitaClock) {
-  const processiInEsecuzione = listaProcessi.map(p => ({
+function simulaPriorita(clock) {
+  const processiInEsecuzione = processi.map(p => ({
     ...p,
     tempoRimanente: p.durata,
     completato: false,
     esecuzioni: []
   }));
 
-  let tempoAttuale = 0;
+  let tempoCorrente = 0;
 
   const diagramma = document.querySelector("#diagramma tbody");
   diagramma.innerHTML = "";
 
   const intervallo = setInterval(() => {
-    let processoSelezionato = null;
-    let prioritaMinima = Infinity;
+    let processoMigliore = null;
+    let prioritaMigliore = Infinity;
 
     for (const processo of processiInEsecuzione) {
       if (!processo.completato &&
-        processo.arrivo <= tempoAttuale &&
+        processo.arrivo <= tempoCorrente &&
         processo.tempoRimanente > 0 &&
-        processo.priorita < prioritaMinima) {
-        processoSelezionato = processo;
-        prioritaMinima = processo.priorita;
+        processo.priorita < prioritaMigliore) {
+        processoMigliore = processo;
+        prioritaMigliore = processo.priorita;
       }
     }
 
-    if (processoSelezionato) {
-      processoSelezionato.tempoRimanente--;
-      processoSelezionato.esecuzioni.push(tempoAttuale);
+    if (processoMigliore) {
+      processoMigliore.tempoRimanente--;
+      processoMigliore.esecuzioni.push(tempoCorrente);
 
-      if (processoSelezionato.tempoRimanente === 0) {
-        processoSelezionato.completato = true;
-        processoSelezionato.tempoCompletamento = tempoAttuale + 1;
-        processoSelezionato.turnAroundTime = processoSelezionato.tempoCompletamento - processoSelezionato.arrivo;
-        processoSelezionato.tempoAttesa = processoSelezionato.turnAroundTime - processoSelezionato.durata;
+      if (processoMigliore.tempoRimanente === 0) {
+        processoMigliore.completato = true;
+        processoMigliore.tempoCompletamento = tempoCorrente + 1;
+        processoMigliore.turnAroundTime = processoMigliore.tempoCompletamento - processoMigliore.arrivo;
+        processoMigliore.tempoAttesa = processoMigliore.turnAroundTime - processoMigliore.durata;
       }
 
-      aggiornaVisualizzazione(processiInEsecuzione, tempoAttuale);
+      aggiornaVisualizzazione(processiInEsecuzione, tempoCorrente);
     }
 
-    tempoAttuale++;
+    tempoCorrente++;
 
     if (processiInEsecuzione.every(p => p.completato)) {
-      aggiornaVisualizzazione(processiInEsecuzione, tempoAttuale);
+      aggiornaVisualizzazione(processiInEsecuzione, tempoCorrente);
       clearInterval(intervallo);
       mostraRisultatiFinali(processiInEsecuzione);
     }
-  }, velocitaClock);
+  }, clock);
 }
 
-function simulaRoundRobin(quantoDiTempo, velocitaClock) {
-  const processiInEsecuzione = listaProcessi.map(p => ({
+function simulaRoundRobin(quanto, clock) {
+  const processiInEsecuzione = processi.map(p => ({
     ...p,
     tempoRimanente: p.durata,
     completato: false,
     quantumUsato: 0,
     esecuzioni: []
   }));
-  let tempoAttuale = 0;
+  let tempoCorrente = 0;
   let indiceProcessoCorrente = 0;
 
   const diagramma = document.querySelector("#diagramma tbody");
@@ -151,21 +148,21 @@ function simulaRoundRobin(quantoDiTempo, velocitaClock) {
     while (!processoTrovato && contatore < processiInEsecuzione.length) {
       const processo = processiInEsecuzione[indiceProcessoCorrente];
 
-      if (!processo.completato && processo.arrivo <= tempoAttuale && processo.tempoRimanente > 0) {
+      if (!processo.completato && processo.arrivo <= tempoCorrente && processo.tempoRimanente > 0) {
         processoTrovato = true;
         processo.quantumUsato++;
         processo.tempoRimanente--;
-        processo.esecuzioni.push(tempoAttuale);
+        processo.esecuzioni.push(tempoCorrente);
 
-        aggiornaVisualizzazione(processiInEsecuzione, tempoAttuale, indiceProcessoCorrente);
+        aggiornaVisualizzazione(processiInEsecuzione, tempoCorrente, indiceProcessoCorrente);
 
         if (processo.tempoRimanente === 0) {
           processo.completato = true;
-          processo.tempoCompletamento = tempoAttuale + 1;
+          processo.tempoCompletamento = tempoCorrente + 1;
           processo.turnAroundTime = processo.tempoCompletamento - processo.arrivo;
           processo.tempoAttesa = processo.turnAroundTime - processo.durata;
           processo.quantumUsato = 0;
-        } else if (processo.quantumUsato >= quantoDiTempo) {
+        } else if (processo.quantumUsato >= quanto) {
           processo.quantumUsato = 0;
           indiceProcessoCorrente = (indiceProcessoCorrente + 1) % processiInEsecuzione.length;
         }
@@ -175,32 +172,26 @@ function simulaRoundRobin(quantoDiTempo, velocitaClock) {
       contatore++;
     }
 
-    tempoAttuale++;
+    tempoCorrente++;
 
     if (processiInEsecuzione.every(p => p.completato)) {
-      aggiornaVisualizzazione(processiInEsecuzione, tempoAttuale);
+      aggiornaVisualizzazione(processiInEsecuzione, tempoCorrente);
       clearInterval(intervallo);
       mostraRisultatiFinali(processiInEsecuzione);
     }
-  }, velocitaClock);
+  }, clock);
 }
 
 function aggiornaVisualizzazione(processi, tempo, processoCorrenteIndex) {
   const diagramma = document.querySelector("#diagramma tbody");
   diagramma.innerHTML = "";
-
-  const colors = [
-    '#FF0000', '#00FF00', '#0000FF', '#FF00FF',
-    '#FFFF00', '#00FFFF', '#800080', '#FFA500',
-    '#008000', '#000080'
-  ];
-
+  
   const tempoMassimo = Math.max(...processi.map(p => p.tempoCompletamento || 0), tempo);
 
   processi.forEach((p, index) => {
-    const riga = document.createElement("tr");
+    const row = document.createElement("tr");
 
-    riga.innerHTML = `
+    row.innerHTML = `
       <td>${p.nome}</td>
       <td>${p.arrivo}</td>
       <td>${p.durata}</td>
@@ -209,27 +200,27 @@ function aggiornaVisualizzazione(processi, tempo, processoCorrenteIndex) {
       <td>${p.completato ? p.tempoAttesa : '-'}</td>
     `;
 
-    const cellaTimeline = document.createElement("td");
+    const timelineCell = document.createElement("td");
     const timeline = document.createElement("div");
     timeline.style.display = "flex";
     timeline.style.width = "100%";
     timeline.style.height = "30px";
-    cellaTimeline.appendChild(timeline);
+    timelineCell.appendChild(timeline);
 
     for (let t = 0; t <= tempoMassimo; t++) {
-      const cella = document.createElement("div");
-      cella.style.flex = "1";
-      cella.style.minWidth = "30px";
-      cella.style.height = "100%";
-      cella.style.border = "1px solid #ddd";
+      const cell = document.createElement("div");
+      cell.style.flex = "1";
+      cell.style.minWidth = "30px";
+      cell.style.height = "100%";
+      cell.style.border = "1px solid #ddd";
 
       if (p.esecuzioni && p.esecuzioni.includes(t)) {
-        cella.style.backgroundColor = colori[index];
+        cell.style.backgroundColor = "#FFD700";
       }
-      timeline.appendChild(cella);
+      timeline.appendChild(cell);
     }
 
-    riga.appendChild(cellaTimeline);
-    diagramma.appendChild(riga);
+    row.appendChild(timelineCell);
+    diagramma.appendChild(row);
   });
 }
