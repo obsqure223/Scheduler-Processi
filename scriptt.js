@@ -181,6 +181,123 @@ function simulaFCFS(clock, statoIniziale = null) {
   }, clock);
 }
 
+function simulaPriorita(clock, statoIniziale = null) {
+  const processiInEsecuzione = processi.map(p => ({
+    ...p,
+    tempoRimanente: p.durata,
+    completato: false,
+    esecuzioni: []
+  }));
+
+  let tempoCorrente = statoIniziale?.tempoCorrente || 0;
+
+  const diagramma = document.querySelector("#diagramma tbody");
+  diagramma.innerHTML = "";
+
+  return setInterval(() => {
+    let processoMigliore = null;
+    let prioritaMigliore = Infinity;
+
+    for (const processo of processiInEsecuzione) {
+      if (!processo.completato &&
+        processo.arrivo <= tempoCorrente &&
+        processo.tempoRimanente > 0 &&
+        processo.priorita < prioritaMigliore) {
+        processoMigliore = processo;
+        prioritaMigliore = processo.priorita;
+      }
+    }
+
+    if (processoMigliore) {
+      processoMigliore.tempoRimanente--;
+      processoMigliore.esecuzioni.push(tempoCorrente);
+
+      if (processoMigliore.tempoRimanente === 0) {
+        processoMigliore.completato = true;
+        processoMigliore.tempoCompletamento = tempoCorrente + 1;
+        processoMigliore.turnAroundTime = processoMigliore.tempoCompletamento - processoMigliore.arrivo;
+        processoMigliore.tempoAttesa = processoMigliore.turnAroundTime - processoMigliore.durata;
+      }
+
+      aggiornaVisualizzazione(processiInEsecuzione, tempoCorrente);
+    }
+
+    tempoCorrente++;
+
+    if (processiInEsecuzione.every(p => p.completato)) {
+      aggiornaVisualizzazione(processiInEsecuzione, tempoCorrente);
+      clearInterval(intervalloSimulazione);
+      mostraRisultatiFinali(processiInEsecuzione);
+    }
+
+    statoSimulazione = {
+      processiInEsecuzione,
+      tempoCorrente
+    };
+  }, clock);
+}
+
+function simulaRoundRobin(quanto, clock, statoIniziale = null) {
+  const processiInEsecuzione = processi.map(p => ({
+    ...p,
+    tempoRimanente: p.durata,
+    completato: false,
+    quantumUsato: 0,
+    esecuzioni: []
+  }));
+  let tempoCorrente = statoIniziale?.tempoCorrente || 0;
+  let indiceProcessoCorrente = statoIniziale?.indiceProcessoCorrente || 0;
+
+  const diagramma = document.querySelector("#diagramma tbody");
+  diagramma.innerHTML = "";
+
+  return setInterval(() => {
+    let processoTrovato = false;
+    let contatore = 0;
+
+    while (!processoTrovato && contatore < processiInEsecuzione.length) {
+      const processo = processiInEsecuzione[indiceProcessoCorrente];
+
+      if (!processo.completato && processo.arrivo <= tempoCorrente && processo.tempoRimanente > 0) {
+        processoTrovato = true;
+        processo.quantumUsato++;
+        processo.tempoRimanente--;
+        processo.esecuzioni.push(tempoCorrente);
+
+        aggiornaVisualizzazione(processiInEsecuzione, tempoCorrente, indiceProcessoCorrente);
+
+        if (processo.tempoRimanente === 0) {
+          processo.completato = true;
+          processo.tempoCompletamento = tempoCorrente + 1;
+          processo.turnAroundTime = processo.tempoCompletamento - processo.arrivo;
+          processo.tempoAttesa = processo.turnAroundTime - processo.durata;
+          processo.quantumUsato = 0;
+        } else if (processo.quantumUsato >= quanto) {
+          processo.quantumUsato = 0;
+          indiceProcessoCorrente = (indiceProcessoCorrente + 1) % processiInEsecuzione.length;
+        }
+      } else {
+        indiceProcessoCorrente = (indiceProcessoCorrente + 1) % processiInEsecuzione.length;
+      }
+      contatore++;
+    }
+
+    tempoCorrente++;
+
+    if (processiInEsecuzione.every(p => p.completato)) {
+      aggiornaVisualizzazione(processiInEsecuzione, tempoCorrente);
+      clearInterval(intervalloSimulazione);
+      mostraRisultatiFinali(processiInEsecuzione);
+    }
+
+    statoSimulazione = {
+      processiInEsecuzione,
+      tempoCorrente,
+      indiceProcessoCorrente
+    };
+  }, clock);
+}
+
 function aggiornaVisualizzazione(processi, tempo, processoCorrenteIndex) {
   const diagramma = document.querySelector("#diagramma tbody");
   diagramma.innerHTML = "";
@@ -225,4 +342,47 @@ function aggiornaVisualizzazione(processi, tempo, processoCorrenteIndex) {
     row.appendChild(timelineCell);
     diagramma.appendChild(row);
   });
+}
+
+function mostraRisultatiFinali(processiInEsecuzione) {
+  const risultatiDiv = document.getElementById("risultati-finali");
+  risultatiDiv.innerHTML = ""; // Pulisci il contenuto precedente
+
+  // Crea una tabella per visualizzare i risultati
+  const table = document.createElement("table");
+  table.innerHTML = `
+    <thead>
+      <tr>
+        <th>Processo</th>
+        <th>Tempo di Arrivo</th>
+        <th>Durata</th>
+        <th>Priorità</th>
+        <th>Tempo di Completamento</th>
+        <th>Turnaround Time</th>
+        <th>Tempo di Attesa</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+  `;
+
+  const tbody = table.querySelector("tbody");
+
+  // Aggiungi una riga per ogni processo
+  for (const processo of processiInEsecuzione) {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${processo.nome}</td>
+      <td>${processo.arrivo}</td>
+      <td>${processo.durata}</td>
+      <td>${processo.priorita}</td>
+      <td>${processo.tempoCompletamento}</td>
+      <td>${processo.turnAroundTime}</td>
+      <td>${processo.tempoAttesa}</td>
+    `;
+    tbody.appendChild(row);
+  }
+
+  // Aggiungi la tabella all'area dei risultati
+  risultatiDiv.appendChild(table);
 }
