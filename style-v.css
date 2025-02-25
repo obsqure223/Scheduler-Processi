@@ -1,0 +1,124 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+body {
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 20px;
+  background: #e4f1fe; /* Sfondo principale (celeste chiaro) */
+  color: #333333;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: none;  /* Rimosso il box-shadow */
+}
+
+header {
+  text-align: center;
+  font-size: 30px;
+  font-weight: 700;
+  color: #22313f;  /* Testo della scritta 'Simulazione Scheduler' (blu scuro) */
+  margin-bottom: 30px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.form-section {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+input, select {
+  width: 100%;
+  padding: 6px 10px;
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  font-size: 12px;
+  background: #ffffff;  /* Interno bianco per input e select */
+  color: #333333;
+  transition: all 0.3s ease;
+}
+
+input[type="number"], select[name="algoritmo_scheduling"] {
+  width: 80%;
+  padding: 6px 8px;
+  font-size: 12px;
+}
+
+input:focus, select:focus {
+  border-color: #34495e;  /* Colore bordi blu scuro al focus */
+  box-shadow: 0 0 0 3px rgba(52, 73, 94, 0.2);
+  outline: none;
+  background: rgba(255, 255, 255, 0.6);
+}
+
+button {
+  padding: 8px 15px;
+  border: none;
+  background: #70a9d6; /* Colore dei tasti più scuro (blu più intenso) */
+  color: #ffffff;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(112, 169, 214, 0.4);
+}
+
+.table-container {
+  margin-top: 40px;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 15px;
+  background: #ffffff; /* Sfondo bianco per la tabella */
+}
+
+th, td {
+  padding: 10px 15px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  text-align: center;
+  font-size: 12px;
+  color: #34495e; /* Testo nelle celle (grigio scuro) */
+}
+
+th {
+  background: #22313f; /* Intestazioni della tabella (blu scuro) */
+  color: #ffffff; /* Testo nelle intestazioni (bianco) */
+}
+
+tr:nth-child(even) {
+  background: #e4f1fe;  /* Righe pari con sfondo celeste chiaro */
+}
+
+tr:hover {
+  background: #8dc6ff;  /* Righe con passaggio del mouse (celeste scuro) */
+}
+
+/* Coda e diagramma con bordi tondi */
+.coda-diagramma {
+  border-radius: 15px;
+  padding: 20px;
+  background: #34495e;  /* Grigio scuro per la coda e il diagramma */
+  color: #ffffff;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 20px;
+  }
+}
