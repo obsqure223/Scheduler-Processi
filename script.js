@@ -192,7 +192,7 @@ function simulaPriorita(clock, statoIniziale = null) {
   diagramma.innerHTML = "";
 
   return setInterval(() => {
-    let processoMigliore = null;
+    let processoAvanzato = null;
     let prioritaMigliore = Infinity;
 
     for (const processo of processiInEsecuzione) {
@@ -200,20 +200,20 @@ function simulaPriorita(clock, statoIniziale = null) {
         processo.arrivo <= tempoCorrente &&
         processo.tempoRimanente > 0 &&
         processo.priorita < prioritaMigliore) {
-        processoMigliore = processo;
+        processoAvanzato = processo;
         prioritaMigliore = processo.priorita;
       }
     }
 
-    if (processoMigliore) {
-      processoMigliore.tempoRimanente--;
-      processoMigliore.esecuzioni.push(tempoCorrente);
+    if (processoAvanzato) {
+      processoAvanzato.tempoRimanente--;
+      processoAvanzato.esecuzioni.push(tempoCorrente);
 
-      if (processoMigliore.tempoRimanente === 0) {
-        processoMigliore.completato = true;
-        processoMigliore.tempoCompletamento = tempoCorrente + 1;
-        processoMigliore.turnAroundTime = processoMigliore.tempoCompletamento - processoMigliore.arrivo;
-        processoMigliore.tempoAttesa = processoMigliore.turnAroundTime - processoMigliore.durata;
+      if (processoAvanzato.tempoRimanente === 0) {
+        processoAvanzato.completato = true;
+        processoAvanzato.tempoCompletamento = tempoCorrente + 1;
+        processoAvanzato.turnAroundTime = processoAvanzato.tempoCompletamento - processoAvanzato.arrivo;
+        processoAvanzato.tempoAttesa = processoAvanzato.turnAroundTime - processoAvanzato.durata;
       }
 
       aggiornaVisualizzazione(processiInEsecuzione, tempoCorrente);
